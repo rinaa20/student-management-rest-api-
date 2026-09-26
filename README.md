@@ -16,16 +16,16 @@ Proyek ini dibangun menggunakan teknologi berikut:
 4. Cara Menjalankan Backend
 Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer lokal Anda:
 
-1. Clone atau download repository ini ke komputer Anda.
-2. Buka terminal atau command prompt, lalu masuk ke direktori folder backend proyek:
+## 1. Clone atau download repository ini ke komputer Anda.
+## 2. Buka terminal atau command prompt, lalu masuk ke direktori folder backend proyek:
    ```bash
    cd student-management-api
    ```
-3. Install semua dependencies yang dibutuhkan:
+## 3. Install semua dependencies yang dibutuhkan:
    ```bash
    npm install
    ```
-4. Konfigurasi Environment Variable:
+## 4. Konfigurasi Environment Variable:
    Buat file baru bernama `.env` di folder utama (root), lalu isi dengan konfigurasi database dan server Anda (contoh):
    ```env
    PORT=5000
@@ -35,11 +35,11 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
    DB_NAME=student_ms
    JWT_SECRET=rahasia_banget
    ```
-5. Jalankan Migrasi Database (jika menggunakan ORM/Migration):
+## 5. Jalankan Migrasi Database (jika menggunakan ORM/Migration):
    ```bash
    npm run migrate
    ```
-6. Jalankan Server Backend:
+## 6. Jalankan Server Backend:
    ```bash
    # Mode Development (dengan nodemon)
    npm run dev
@@ -49,32 +49,30 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
    ```
 ---
 5. Cara Menjalankan Frontend
-
-1. Buka terminal baru, lalu masuk ke direktori folder frontend:
+## 1. Buka terminal baru, lalu masuk ke direktori folder frontend:
    ```bash
    cd frontend
    ```
-2. Install dependencies frontend:
+## 2. Install dependencies frontend:
    ```bash
    npm install
    ```
-3. Jalankan aplikasi frontend:
+## 3. Jalankan aplikasi frontend:
    ```bash
    npm run dev
    ```
-4. Buka browser Anda dan akses URL frontend yang tertera di terminal
+## 4. Buka browser Anda dan akses URL frontend yang tertera di terminal
 ---
 6. Daftar Endpoint API
-Berikut adalah dokumentasi endpoint utama yang tersedia pada REST API ini:
-A. Manajemen Siswa (siswa)
+### A. Manajemen Siswa
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
-| `GET` | `/api/` | Mendapatkan semua data siswa |
+| `GET` | `/api/siswa` | Mendapatkan semua data siswa |
 | `GET` | `/api/siswa/{id}` | Mendapatkan detail siswa berdasarkan ID |
 | `POST` | `/api/siswa` | Menambah data siswa baru |
 | `PUT` | `/api/siswa/{id}` | Mengubah data siswa berdasarkan ID |
 | `DELETE` | `/api/siswa/{id}` | Menghapus data siswa |
-. Manajemen Kelas & Nilai (Classes & Grades)
+### B. Manajemen Kelas & Nilai
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
 | `GET` | `/api/classes` | Mendapatkan daftar kelas |
@@ -86,7 +84,7 @@ A. Manajemen Siswa (siswa)
 ---
 8. Identitas Pembuat
 * Nama:Rina Rusliana
-* NIPD: 
+* NIPD: 242510076
 * Kelas: Rekayasa Perangkat Lunak
 * Email: rinaruslianaaa09@gmail.com
 * GitHub: [https://github.com/rinaa20]
