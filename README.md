@@ -73,13 +73,6 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
 | `POST` | `/api/siswa` | Menambah data siswa baru |
 | `PUT` | `/api/siswa/{id}` | Mengubah data siswa berdasarkan ID |
 | `DELETE` | `/api/siswa/{id}` | Menghapus data siswa |
-
-### B. Manajemen Kelas & Nilai
-| Method | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `GET` | `/api/classes` | Mendapatkan daftar kelas |
-| `GET` | `/api/grades/student/{id}` | Mendapatkan transkrip/nilai siswa tertentu |
-| `POST` | `/api/grades` | Input nilai siswa |
 ---
 ## 7. Screenshot Aplikasi dan Tes REST API
 ![Screenshot](./screenshot/ScreenshotAPK.png)
@@ -94,4 +87,8 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
 * NIPD: 242510076
 * Kelas: Rekayasa Perangkat Lunak
 * Email: rinaruslianaaa09@gmail.com
+<<<<<<< HEAD
 * GitHub: [https://github.com/rinaa20]K
+=======
+* GitHub: [https://github.com/rinaa20]
+>>>>>>> 4c5df85c7ff1d36cd5fc4791e8fc8e6fb17ebab9
