@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Data Siswa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FBF9F1;
+        }
+        #siswa-table {
+            transition: opacity 0.3s ease-in-out;
+        }
+        #siswa-tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        #siswa-tbody tr:hover {
+            background-color: #FFFDF4;
+        }
+    </style>
+    <!-- Step 1: Layout -->
+</head>
+<body class="bg-[#FBF9F1] min-h-screen py-12 px-4 text-stone-700">
+
+    <div class="max-w-6xl mx-auto bg-[#FFFDF9] shadow-2xl rounded-3xl overflow-hidden border border-[#F0EBE1]">
+        <!-- Header -->
+        <div class="bg-[#FEE140] px-8 py-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-stone-900 text-3xl font-extrabold tracking-tight">Daftar Siswa</h1>
+                <p class="text-stone-800 text-sm mt-1 font-medium">Terhubung real-time dengan REST API Backend</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="openAddModal()" class="bg-stone-900 hover:bg-stone-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm cursor-pointer">
+                    ➕ Tambah Siswa
+                </button>
+                <button onclick="fetchSiswa()" class="bg-white hover:bg-stone-50 text-stone-800 text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm hover:shadow border border-stone-200 cursor-pointer">
+                    🔄 Muat Ulang
+                </button>
+            </div>
+        </div>
+
+        <!-- Konten / Tabel -->
+        <div class="p-8">
+            <!-- Indikator Loading -->
+            <div id="loading" class="flex flex-col items-center justify-center py-16 text-stone-400 gap-3">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#E5B80B]"></div>
+                <span class="text-sm font-medium text-stone-500">Memuat data siswa...</span>
+            </div>
+
+            <!-- Indikator Error -->
+            <div id="error-message" class="hidden bg-[#FDF2F2] border-l-4 border-rose-400 text-rose-700 p-4 rounded-r-2xl mb-6 shadow-sm" role="alert">
+                <p class="font-bold">Gagal Terhubung ke Server</p>
+                <span class="block text-sm mt-1" id="error-text"></span>
+            </div>
+
+            <!-- Tabel Data -->
+            <div class="overflow-x-auto rounded-2xl border border-[#F0EBE1] shadow-sm bg-white">
+                <table id="siswa-table" class="hidden min-w-full divide-y divide-[#F0EBE1]">
+                    <thead class="bg-[#FFFDF4]">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">NIS</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">Kelas</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">Jurusan</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-stone-600 uppercase tracking-wider">Alamat</th>
+                            <th class="px-6 py-4 text-center text-xs font-bold text-stone-600 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="siswa-tbody" class="bg-white divide-y divide-[#F9F6EE]">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form (Tambah & Edit) -->
+    <div id="siswa-modal" class="hidden fixed inset-0 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-[#FFFDF9] rounded-3xl max-w-md w-full p-8 shadow-2xl border border-[#F0EBE1]">
+            <h2 id="modal-title" class="text-2xl font-bold text-stone-900 mb-4">Tambah Siswa Baru</h2>
+            <form id="siswa-form" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="siswa-id">
+                
+                <div class="mb-3">
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-1">NIS</label>
+                    <input type="text" id="input-nis" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-1">Nama</label>
+                    <input type="text" id="input-nama" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-1">Kelas</label>
+                    <input type="text" id="input-kelas" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-1">Jurusan</label>
+                    <input type="text" id="input-jurusan" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm">
+                </div>
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-1">Alamat</label>
+                    <textarea id="input-alamat" required rows="2" class="w-full px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl text-stone-600 hover:bg-stone-100 font-semibold text-sm transition cursor-pointer">Batal</button>
+                    <button type="submit" id="save-btn" class="px-5 py-2.5 rounded-xl bg-[#E5B80B] hover:bg-[#d4a907] text-stone-900 font-semibold text-sm transition shadow-sm cursor-pointer">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript untuk Fetch API -->
+    <script>
+        const API_URL = 'http://localhost:3000/api/siswa';
+        let siswaData = [];
+
+        // Ambil data saat halaman pertama kali dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchSiswa();
+        });
+
+        // 1. Fungsi Mengambil Data Siswa (GET)
+        async function fetchSiswa() {
+            const loadingEl = document.getElementById('loading');
+            const tableEl = document.getElementById('siswa-table');
+            const tbodyEl = document.getElementById('siswa-tbody');
+            const errorEl = document.getElementById('error-message');
+            const errorTextEl = document.getElementById('error-text');
+
+            loadingEl.classList.remove('hidden');
+            tableEl.classList.add('hidden');
+            errorEl.classList.add('hidden');
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`Gagal mengambil data. Status: ${response.status}`);
+
+                siswaData = await response.json();
+
+                loadingEl.classList.add('hidden');
+                tableEl.classList.remove('hidden');
+                tbodyEl.innerHTML = '';
+
+                if (!siswaData || siswaData.length === 0) {
+                    tbodyEl.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="px-6 py-6 text-center text-sm text-stone-400">Belum ada data siswa.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                siswaData.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-stone-900">${item.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-800">${item.nis}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-800 font-medium">${item.nama}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">${item.kelas}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-stone-600">${item.jurusan}</td>
+                        <td class="px-6 py-4 text-sm text-stone-600 max-w-xs truncate">${item.alamat}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-2">
+                            <button onclick="openEditModal(${item.id})" class="text-amber-600 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg transition font-semibold cursor-pointer">Edit</button>
+                            <button onclick="deleteSiswa(${item.id})" class="text-rose-600 hover:text-rose-800 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition font-semibold cursor-pointer">Hapus</button>
+                        </td>
+                    `;
+                    tbodyEl.appendChild(tr);
+                });
+
+            } catch (error) {
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                errorTextEl.textContent = error.message;
+            }
+        }
+
+        // Modal Elements
+        const modalEl = document.getElementById('siswa-modal');
+        const modalTitleEl = document.getElementById('modal-title');
+        const siswaIdEl = document.getElementById('siswa-id');
+        const inputNisEl = document.getElementById('input-nis');
+        const inputNamaEl = document.getElementById('input-nama');
+        const inputKelasEl = document.getElementById('input-kelas');
+        const inputJurusanEl = document.getElementById('input-jurusan');
+        const inputAlamatEl = document.getElementById('input-alamat');
+
+        function openAddModal() {
+            modalTitleEl.textContent = "Tambah Siswa Baru";
+            siswaIdEl.value = "";
+            inputNisEl.value = "";
+            inputNamaEl.value = "";
+            inputKelasEl.value = "";
+            inputJurusanEl.value = "";
+            inputAlamatEl.value = "";
+            modalEl.classList.remove('hidden');
+        }
+
+        function openEditModal(id) {
+            const siswa = siswaData.find(s => s.id === id);
+            if (!siswa) return;
+
+            modalTitleEl.textContent = "Edit Data Siswa";
+            siswaIdEl.value = siswa.id;
+            inputNisEl.value = siswa.nis;
+            inputNamaEl.value = siswa.nama;
+            inputKelasEl.value = siswa.kelas;
+            inputJurusanEl.value = siswa.jurusan;
+            inputAlamatEl.value = siswa.alamat;
+            modalEl.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modalEl.classList.add('hidden');
+        }
+
+        // 2. Fungsi Tambah & Edit Data (POST & PUT)
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const id = siswaIdEl.value;
+            const payload = {
+                nis: inputNisEl.value,
+                nama: inputNamaEl.value,
+                kelas: inputKelasEl.value,
+                jurusan: inputJurusanEl.value,
+                alamat: inputAlamatEl.value
+            };
+
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.textContent = "Menyimpan...";
+            saveBtn.disabled = true;
+
+            try {
+                let response;
+                if (id) {
+                    // Update (PUT)
+                    response = await fetch(`${API_URL}/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    // Create (POST)
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.messages ? result.messages.join(', ') : result.message);
+                }
+
+                alert(result.message || 'Data berhasil disimpan!');
+                closeModal();
+                fetchSiswa(); // Muat ulang data terbaru
+            } catch (error) {
+                alert('Gagal: ' + error.message);
+            } finally {
+                saveBtn.textContent = "Simpan";
+                saveBtn.disabled = false;
+            }
+        }
+
+        // 3. Fungsi Hapus Data (DELETE) dengan Konfirmasi
+        async function deleteSiswa(id) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus data siswa dengan ID ${id}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Gagal menghapus data.');
+
+                alert(result.message || 'Data berhasil dihapus!');
+                fetchSiswa(); // Muat ulang data terbaru
+            } catch (error) {
+                alert('Gagal menghapus: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
