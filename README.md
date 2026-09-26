@@ -81,12 +81,17 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
 | `GET` | `/api/grades/student/{id}` | Mendapatkan transkrip/nilai siswa tertentu |
 | `POST` | `/api/grades` | Input nilai siswa |
 ---
-## 7. Screenshot Aplikasi
+## 7. Screenshot Aplikasi dan Tes REST API
 ![Screenshot](./screenshot/ScreenshotAPK.png)
+![Screenshot](./screenshot/GetData.png)
+![Screenshot](./screenshot/GetDataByID.png)
+![Screenshot](./screenshot/PostData.png)
+![Screenshot](./screenshot/PutData.png)
+![Screenshot](./screenshot/DeleteData.png)
 ---
 ## 8. Identitas Pembuat
 * Nama:Rina Rusliana
 * NIPD: 242510076
 * Kelas: Rekayasa Perangkat Lunak
 * Email: rinaruslianaaa09@gmail.com
-* GitHub: [https://github.com/rinaa20]
+* GitHub: [https://github.com/rinaa20]K
