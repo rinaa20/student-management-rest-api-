@@ -73,13 +73,6 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
 | `POST` | `/api/siswa` | Menambah data siswa baru |
 | `PUT` | `/api/siswa/{id}` | Mengubah data siswa berdasarkan ID |
 | `DELETE` | `/api/siswa/{id}` | Menghapus data siswa |
-
-### B. Manajemen Kelas & Nilai
-| Method | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| `GET` | `/api/classes` | Mendapatkan daftar kelas |
-| `GET` | `/api/grades/student/{id}` | Mendapatkan transkrip/nilai siswa tertentu |
-| `POST` | `/api/grades` | Input nilai siswa |
 ---
 ## 7. Screenshot Aplikasi
 ![Screenshot](./screenshot/ScreenshotAPK.png)
