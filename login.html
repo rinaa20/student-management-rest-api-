@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Siswa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FBF9F1;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-[#FBF9F1] min-h-screen flex items-center justify-center py-12 px-4 text-stone-700">
+
+    <div class="max-w-md w-full bg-[#FFFDF9] shadow-2xl rounded-3xl overflow-hidden border border-[#F0EBE1] fade-in">
+        <!-- Header Kartu Login -->
+        <div class="bg-[#FEE140] px-8 py-8 text-center">
+            <h1 class="text-stone-900 text-3xl font-extrabold tracking-tight">Login Siswa</h1>
+            <p class="text-stone-800 text-sm mt-1 font-medium">Masukkan NIS dan Nama Anda untuk masuk</p>
+        </div>
+
+        <!-- Form Login -->
+        <div class="p-8">
+            <!-- Indikator Error -->
+            <div id="login-error" class="hidden bg-[#FDF2F2] border-l-4 border-rose-400 text-rose-700 p-4 rounded-r-2xl mb-6 shadow-sm text-sm" role="alert">
+                <p class="font-bold">Gagal Masuk</p>
+                <span class="block mt-1" id="error-text">NIS atau Nama salah.</span>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-2">NIS (Nomor Induk Siswa)</label>
+                    <input type="text" id="login-nis" required placeholder="Contoh: 10203" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm bg-white shadow-sm transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-2">Nama Lengkap</label>
+                    <input type="text" id="login-nama" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-[#E5B80B] text-stone-800 text-sm bg-white shadow-sm transition">
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full mt-2 bg-stone-900 hover:bg-stone-800 text-white font-semibold py-3 px-4 rounded-xl transition shadow-md hover:shadow-lg text-sm cursor-pointer">
+                    Masuk ke Sistem
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pop-up Sukses Modern di Tengah -->
+    <div id="success-modal" class="hidden fixed inset-0 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-[#FFFDF9] rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-[#F0EBE1] text-center">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">✓</div>
+            <h3 class="text-xl font-bold text-stone-900 mb-1">Login Berhasil!</h3>
+            <p class="text-sm text-stone-600 mb-6">Mengalihkan ke halaman utama...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Integrasi API Login -->
+    <script>
+        const LOGIN_API_URL = 'http://localhost:3000/login';
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const nis = document.getElementById('login-nis').value.trim();
+            const nama = document.getElementById('login-nama').value.trim();
+            const errorBox = document.getElementById('login-error');
+            const errorText = document.getElementById('error-text');
+            const submitBtn = document.getElementById('submit-btn');
+
+            errorBox.classList.add('hidden');
+            submitBtn.textContent = "Memeriksa...";
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(LOGIN_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nis, nama })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'NIS atau Nama tidak ditemukan.');
+                }
+
+                // Simpan data sesi sederhana di localStorage jika diperlukan
+                if (data.data) {
+                    localStorage.setItem('siswa_id', data.data.id);
+                    localStorage.setItem('siswa_nama', data.data.nama);
+                }
+
+                // Munculkan pop-up sukses lalu pindah halaman
+                document.getElementById('success-modal').classList.remove('hidden');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1200);
+
+            } catch (error) {
+                errorText.textContent = error.message || "Gagal terhubung ke server backend.";
+                errorBox.classList.remove('hidden');
+            } finally {
+                submitBtn.textContent = "Masuk ke Sistem";
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
