@@ -87,8 +87,5 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan server backend di komputer 
 * NIPD: 242510076
 * Kelas: Rekayasa Perangkat Lunak
 * Email: rinaruslianaaa09@gmail.com
-<<<<<<< HEAD
-* GitHub: [https://github.com/rinaa20]K
-=======
 * GitHub: [https://github.com/rinaa20]
->>>>>>> 4c5df85c7ff1d36cd5fc4791e8fc8e6fb17ebab9
+
